@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+int t;
+
+struct node{
+    ll a, b;
+};
+
+node trans(string x){
+    node now = {0, 0};
+    if(x[0] == '1') now.a++;
+    for(int i = 1, tmp = 1; i < x.size(); i++){
+        if(i % 2 == 0) tmp *= -2;
+
+        if(x[i] == '1' && (i % 2 == 1)) now.b += tmp;
+        if(x[i] == '1' && (i % 2 == 0)) now.a += tmp;
+
+    }
+    //cout << "now " << now.b << endl;
+    return now;
+}
+
+int main(){
+    freopen("1.in", "r", stdin);
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+    cin >> t;
+    while(t--){
+        string A, B;
+        cin >> A >> B;
+        reverse(A.begin(), A.end());
+        reverse(B.begin(), B.end());
+        node a = trans(A), b = trans(B);
+        node c = {0, 0};
+
+        cout << "nodea: " << a.a << " " << a.b << endl;
+        cout << "nodeb: " << b.a << " " << b.b << endl;
+
+        c.b = (a.b * b.a + a.a * b.b);
+        c.a = a.a * b.a - a.b * b.b * 2;
+
+        cout << "nodec: " << c.a << " " << c.b << endl;
+
+        string ans = "";
+        int cnt = 1;
+        if(abs(c.a) & 1){c.a--; ans += "1";}
+        else ans += "0";
+
+        if(abs(c.b) & 1){c.b--; ans += "1";}
+        else ans += "0";
+
+        while(c.a != 0 || c.b != 0){
+            cnt++;
+            if(cnt & 1){
+                if(abs(c.b) % (-2) == 1) ans += "1";
+                else ans += "0";
+                c.b /= -2;
+            }
+            else {
+                //cout << "test" << endl;
+                if(abs(c.a) % (-2) == 1) ans += "1";
+                else ans += "0";
+                c.a /= -2;
+            }
+        }
+        reverse(ans.begin(), ans.end());
+        if(!ans.empty()) cout << ans << endl;
+        else cout << 0 << endl;
+    }
+
+	return 0;
+}
