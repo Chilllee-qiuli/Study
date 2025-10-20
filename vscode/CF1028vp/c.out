@@ -1,0 +1,13 @@
+test1
+tets2
+bit[1].count() = 2
+bit[2].count() = 2
+bit[3].count() = 2
+2
+tets2
+3
+tets2
+bit[1].count() = 2
+bit[2].count() = 2
+bit[3].count() = 2
+2

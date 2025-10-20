@@ -1,0 +1,11 @@
+if(line[1].first < line[1].second)
+        {
+            swap(line[1].first.x, line[1].second.x);
+            swap(line[1].first.y, line[1].second.y);
+        }
+        
+        if(row[1].first < row[1].second)
+        {
+            swap(row[1].first.x, row[1].second.x);
+            swap(row[1].first.y, row[1].second.y);
+        }
