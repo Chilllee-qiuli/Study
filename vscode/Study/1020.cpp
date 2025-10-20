@@ -31,3 +31,4 @@ int main(){
         cout << pre[i] << " ";
     return 0;
 }
+//
