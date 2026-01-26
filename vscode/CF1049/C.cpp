@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long ll;
 const int maxn = 2e5 + 10;
-const int inf = 0x3f3f3f3f;
+const ll inf = 0x3f3f3f3f3f3f3f3f;
 int t;
 int a[maxn];
 int n;
@@ -18,13 +18,27 @@ int main(){
         ll ans;
         if(n & 1) ans = n - 1;
         else ans = n - 2;
-        ll minn = inf, maxx = -inf, minn_mini = 0, minn_maxi = 0, maxx_mini = 0, maxx_maxi = 0;
-        
-        //cout << "test " << endl;
-            //cout << maxx << " " << minn << " " << maxx_mini << " " << maxx_maxi << " " << minn_mini << " " << minn_maxi << endl;
+
+        ll tmp = 0;
         for(int i = 1; i <= n; i++)
-            if(i & 1) ans += a[i];
-            else ans -= a[i];
+        if(i & 1) tmp += a[i];
+        else tmp -= a[i];
+
+        ans += tmp;
+
+        ll minn_even = inf, minn_odd = inf;
+        for(int i = 1; i <= n; i++){
+            if(i & 1){
+                ans = max(ans, tmp - a[i] - a[i] + i - minn_even);
+                minn_odd = min(minn_odd, 0ll + i + a[i] + a[i]);
+            }
+            else{
+                ans = max(ans, tmp + a[i] + a[i] + i - minn_odd);
+                minn_even = min(minn_even, 0ll + i - a[i] - a[i]);
+            } 
+        }
+        
+
         cout << ans << endl;
 
     }

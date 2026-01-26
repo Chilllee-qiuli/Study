@@ -1,15 +1,113 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
+typedef pair<int, int> pr;
+#define mk make_pair
+const int maxn = 1e5 + 10;
+int n, m;
+int p[maxn], L, T, V;
+int d[maxn], v[maxn], a[maxn];
+int tot;
+
+map<pr, int> mp;
+// 定义仿函数作为比较器（重载operator()）
+struct cmpl {
+    bool operator()(pr x, pr y) {
+        return x.first < y.first;  // 比较pair的first
+    }
+};
+struct cmpr {
+    bool operator()(pr x, pr y) {
+        return x.second < y.second;  // 比较pair的second
+    }
+};
+
+// 优先队列使用仿函数类型作为比较器
+priority_queue<pr, vector<pr>, cmpl> ql;
+priority_queue<pr, vector<pr>, cmpr> qr;
 
 
+vector<int> lshtmp; // li san hua
+map<int, int> lsh;
+
+int tree[maxn * 2];
+int qry(int x){
+    int tmp = 0;
+    for(int i = x; i; i -= i & (-i)) tmp += tree[i];
+    return tmp;
+}
+
+void add(int p, int x){
+    for(; p < maxn * 2; p += p & (-p)) tree[p] += x;
+}
+pr work_len(ll d, ll v, ll a){
+    int l = lsh[d], r = tot;
+    if(a < 0){
+       int tmps = 1.0 * (pow(v, v) - pow(V, V)) / 2 / a;
+       r = lower_bound(lshtmp.begin(), lshtmp.end(), d + tmps) - lshtmp.begin() + 1;
+    }
+    else if(v <= V){
+        int tmps = 1.0 * (pow(V, V) - pow(v, v)) / 2 / a;
+        l = lsh[d + tmps];
+    }
+    return mk(l, r);
+}
+
+void work_pre(){
+    for(int i = 1; i <= n; i++){
+        pr tmp;
+        if(a == 0){
+            if(v[i] <= V) continue;
+            else tmp = mk(lsh[d[i]], tot);
+        }
+        else if(a < 0){
+            if(v[i] <= V) continue;
+            else tmp = work_len(d[i], v[i], a[i]);
+        }
+        else tmp = work_len(d[i], v[i], a[i]);
+
+    }
+}
 int main(){
+    freopen("detect.in", "r", stdin);
     ios::sync_with_stdio(0);
     cin.tie(0), cout.tie(0);
 
-    int u = 1;
-    u = u << 1 | 1;
-    cout << u << endl;
+    cin >> T;
 
-	return 0;
+    while(T--){ // 多测不清空，亲人两行泪
+        mp.clear();
+        priority_queue<pr, vector<pr>, cmpl>().swap(ql);
+        priority_queue<pr, vector<pr>, cmpr>().swap(qr);
+        lshtmp.clear();
+        lsh.clear();
+        memset(tree, 0, sizeof(tree));
+
+        cin >> n >> m >> L >> V;
+        for(int i = 1; i <= n; i++){
+            cin >> d[i] >> v[i] >> a[i];
+            lshtmp.push_back(d[i]);
+        }
+        for(int i = 1; i <= m; i++) {
+            cin >> p[i];
+            lshtmp.push_back(p[i]);
+        }
+        sort(lshtmp.begin(), lshtmp.end());
+        unique(lshtmp.begin(), lshtmp.end());
+        for(int i = 0; i < lshtmp.size(); i++){
+            lsh[lshtmp[i]] = i + 1;
+        }
+        tot = lshtmp.size();
+
+        for(int i = 1; i <= m; i++) add(lsh[p[i]], 1);
+
+        work_pre();
+
+
+
+    }
+
+
+
+    return 0;
 }
