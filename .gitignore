@@ -12,3 +12,7 @@
 # IDE
 .vscode/
 .idea/
+
+#test data
+./cph
+./cph/*
