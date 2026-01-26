@@ -9,10 +9,7 @@
 *.txt
 *.log
 
-# IDE
-.vscode/
-.idea/
+# ignore VS Code config folders anywhere
+**/.vscode/
+**/.cph/
 
-#test data
-./cph
-./cph/*
