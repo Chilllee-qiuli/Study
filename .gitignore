@@ -1,0 +1,14 @@
+# build outputs
+*.exe
+*.out
+*.o
+*.obj
+
+# local input/output
+*.in
+*.txt
+*.log
+
+# IDE
+.vscode/
+.idea/
