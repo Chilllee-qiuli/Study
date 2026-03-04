@@ -10,14 +10,17 @@ ll dp[maxn];
 
 struct node
 {
-    int x, y;
+    ll x;
+    int y;
     friend bool operator<(node fi, node se)
     {
-        return fi.x == se.x ? fi.y > se.y : fi.x < se.x;
+        return fi.x == se.x ? fi.y < se.y : fi.x > se.x;
     }
 };
 node a[maxn];
 priority_queue<node> qu;
+
+void setmax()
 
 void solve_one()
 {
@@ -26,7 +29,9 @@ void solve_one()
         qu.pop();
     dp[0] = 0;
     now = 0;
-    int nul = 0;
+    int cnt = 1;
+    ll maxx = 0;
+    multiset<int> mt;
     for (int i = 1; i <= n; i++)
     {
         int x, y;
@@ -37,40 +42,28 @@ void solve_one()
     sort(a + 1, a + 1 + n, [](node x, node y)
          { return x.y == y.y ? x.x > y.x : x.y > y.y; });
 
-    for (int i = 1; i <= n; i++)
-    {
-        // while(!qu.empty() && qu.top().x < a[i].x) qu.pop();
-        // dp[i] = qu.size() + 1;
-        // qu.push(a[i]);
-        if (qu.size() < a[i].y)
-        {
-            qu.push(a[i]);
-            now += a[i].x;
+
+    for(int k = n; k >= 0; k--){
+        while(cnt < n && a[cnt].y >= k){
+            now += a[cnt].x;
+            mt.insert(a[cnt].x);
+            cnt++;
         }
-        else
-        {
-            // while(!qu.empty() && qu.top().x < a[i].x) { now -= qu.top().x; qu.pop();}
-            while (!qu.empty() && qu.size() >= a[i].y)
-            {
-                now -= qu.top().x;
-                qu.pop();
-            }
-            qu.push(a[i]);
+        while(mt.size() > k + 1){
+            now -= *mt.begin();
+            mt.erase(*mt.begin());
         }
-        nul = max(nul, a[i].x);
-        dp[qu.size()] = max(dp[qu.size()], now);
     }
-    for(int i = n; i >= 0; i--) dp[i] = max(dp[i + 1], dp[i]);
-    ll base_max = dp[1]; 
+
 
     for (int i = 1; i <= m; i++)
     {
         int x, y;
         cin >> x >> y;
         if (y == 0)
-            cout << max(base_max, 1ll * x) << " ";
+            cout << max(dp[0], 1ll * x) << " ";
         else
-            cout << max(base_max, dp[y] + x) << " ";
+            cout << max(dp[y - 1], dp[y] + x) << " ";
     }
     cout << endl;
 }
