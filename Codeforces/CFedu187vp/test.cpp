@@ -2,6 +2,15 @@
 using namespace std;
 typedef long long ll;
 
+vector<int> turn(ll x){
+    vector<int> tmp;
+    while(x){
+        if(x & 1) tmp.push_back(1);
+        else tmp.push_back(0);
+        x /= 2;
+    }
+    return tmp;
+}
 
 int main(){
     ios::sync_with_stdio(0);
