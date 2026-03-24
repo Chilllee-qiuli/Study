@@ -8,8 +8,7 @@ int tot;
 vector<int> g[maxn];
 ll leng[maxn];
 ll f[maxn];
-int vis[maxn], T = 0;
-
+int flag[maxn];
 
 ll fd(string s);
 ll dfs(int u);
@@ -36,7 +35,7 @@ int main(){
         string str;
         ll cnt = 0; // 统计长度
         if(!mp[tg]) mp[tg] = ++tot;
-
+        flag[mp[tg]] = 0;
         if(op == 1){
             while(iss >> str){
                 if(str[0] != '$') cnt = (cnt + str.size()) % mod;
@@ -62,15 +61,13 @@ int main(){
     return 0;
 }
 ll dfs(int u){
-    if(vis[u] == T) return f[u] % mod;
-    vis[u] = T;
+    if(flag[u]) return f[u] % mod;
     ll tmp = leng[u] % mod;
     for(auto v : g[u]) tmp = (tmp +  dfs(v)) % mod;
-
+    // flag[u] = 1;
     return f[u] = tmp % mod;
 }
 
 ll fd(string s){
-    ++T;
     return dfs(mp[s]) % mod;
 }
