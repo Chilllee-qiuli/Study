@@ -11,7 +11,7 @@ int siz[maxn], fa[maxn];
 
 int fd(int x){
     if(fa[x] == x) return x;
-    return fa[x] = fd(x);
+    return fa[x] = fd(fa[x]);
 }
 
 void merge(int x, int y){
@@ -23,23 +23,23 @@ void merge(int x, int y){
 int solve(){
     cin >> n;
     vector< bitset<maxn> > bt(n + 1);
-
+    
     for(int i = 1; i <= n; i++){
         string s;
         cin >> s;
         for(int j = 1; j <= n; j++)
         if(s[j - 1] == '1') bt[i].set(j);
     }
-
+    
     for(int i = 1; i <= n; i++) if(!bt[i][i]) return 0; // 自反性验证
-
+    
     for(int i = 1; i <= n; i++)
     for(int j = i + 1; j <= n; j++) 
-        if(bt[i][j] && bt[j][i]) return 0; // 反对称性验证
-
+    if(bt[i][j] && bt[j][i]) return 0; // 反对称性验证
+    
     for(int i = 1; i <= n; i++)
     for(int j = 1; j <= n; j++)
-        if(bt[i][j] && (bt[j] & ~bt[i]).any()) return 0; // 传递性验证
+    if(bt[i][j] && (bt[j] & ~bt[i]).any()) return 0; // 传递性验证
     
     for(int i = 1; i <= n; i++) siz[i] = bt[i].count();
     vector<int> ans(n);
@@ -59,22 +59,23 @@ int solve(){
             // 等会会通过处理，只保留 i 的直接连结点
         }
         for(int j : nn)
-            if(dir[j]){
-                edges.push_back(mk(i, j));
-                dir &= ~bt[j]; //去除满足 i->j->k 的所有 i->k 的边
-                // 这里写法很巧妙，而且排序完由于直接儿子肯定在前面，故正确性有所保障
-            }
+        if(dir[j]){
+            edges.push_back(mk(i, j));
+            dir &= ~bt[j]; //去除满足 i->j->k 的所有 i->k 的边
+            // 这里写法很巧妙，而且排序完由于直接儿子肯定在前面，故正确性有所保障
+        }
     }
-
+    
     if(edges.size() != n - 1) return 0; // 验证边数，要求严格等于 n - 1
+    
 
     // 验证联通关系，不能是森林，跑一个并查集
     for(int i = 1; i <= n; i++) fa[i] = i;
-    for(auto [u, v] : edges) merge(u, v);
+    for(auto [u, v] : edges)  merge(u, v);
     int rt = fd(1);
     for(int i = 2; i <= n; i++)
-        if(fd(i) != rt) return 0;
-
+    if(fd(i) != rt) return 0;
+    
     cout << "YES\n";
     for(auto [u, v] : edges) cout << u << " " << v << "\n";
 
