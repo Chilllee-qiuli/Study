@@ -11,12 +11,12 @@ int siz[maxn], fa[maxn];
 
 int fd(int x){
     if(fa[x] == x) return x;
-    return fa[x] = fd(fa[x]);
+    return fa[x] = fd(fa[x]); // 要把fa[x]丢入查询
 }
 
 void merge(int x, int y){
     int fx = fd(x), fy = fd(y);
-    if(fx != fy) fa[fx] = fy; // 要挂根不是挂x，值得警醒
+    if(fx != fy) fa[fx] = fy; // 要把x的根挂给y，不是挂x，值得警醒
 }
 
 
