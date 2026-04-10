@@ -38,24 +38,24 @@ bool judge(){
         if(lie[k] || hang[k]) return 0;
     }
   
-//   set<string> st;
-//   for(int i = 1; i <= 6; i++) {
-//     string s;
-//     for(int j = 1; j <= n; j++) 
-//     if(mp[i][j] == 1) s += '1';
-//     else s += '0';
-//     if(st.find(s) != st.end()) return 0;
-//     st.insert(s);
-//   }
-//   set<string> sr;
-//   for(int j = 1; j <= 6; j++){
-//     string s;
-//     for(int i = 1; i <= n; i++) 
-//     if(mp[i][j] == 1) s += '1';
-//     else  s += '0';
-//     if(sr.find(s) != sr.end()) return 0;
-//     sr.insert(s);
-//   }
+  set<string> st;
+  for(int i = 1; i <= 6; i++) {
+    string s;
+    for(int j = 1; j <= n; j++) 
+    if(mp[i][j] == 1) s += '1';
+    else s += '0';
+    if(st.find(s) != st.end()) return 0;
+    st.insert(s);
+  }
+  set<string> sr;
+  for(int j = 1; j <= 6; j++){
+    string s;
+    for(int i = 1; i <= n; i++) 
+    if(mp[i][j] == 1) s += '1';
+    else  s += '0';
+    if(sr.find(s) != sr.end()) return 0;
+    sr.insert(s);
+  }
   return 1;
 
 }
