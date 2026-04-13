@@ -7,7 +7,7 @@ int n, t;
 int a[maxn], b[maxn], c[maxn];
 
 int cpt(int x, int y, int z){
-    if(a[x] == b[y] && b[y] == c[z]) return 300;
+    if(a[x] == b[y] && b[y] == c[z]) return 200;
     if(a[x] + 1 == b[y] && b[y] + 1 == c[z]) return 200;
     if(a[x] == b[y] || b[y] == c[z] || c[z] == a[x]) return 100;
     vector<int> vc;

@@ -10,7 +10,7 @@ void print(){
   for(int j = 1; j <= 6; j++){
     if(mp[i][j] == 1) cout << 1 ;
     else  cout << 0 ;
-    cout << " \n"[j == 6];
+    
   }
   cout << endl;
 }
@@ -65,8 +65,11 @@ void dfs(int cnt){
     if(judge()) print();
     return ;
   }
-  int u = cnt / 6 + 1;
+  int u = (cnt - 1) / 6 + 1;
   int v = (cnt - 1)% 6 + 1;
+  if(u < 1 || u > 6 || v < 1 || v > 6){
+    cout << "!! " << u << " "  << v << "\n";
+  }
   if(mp[u][v]) {
     dfs(cnt + 1);
     return ;
