@@ -15,7 +15,7 @@ void mmul(ll a[2][2], ll b[2][2], ll c[2][2], ll x, ll y, ll z){
     for(int j = 0; j < z; j++){ // 枚举c_{i, j}
         d[i][j] = 0;
         for(int k = 0; k < y; k++)
-        d[i][j] = (d[i][j] + a[i][k] * b[k][j]) % mod;
+         (d[i][j] += a[i][k] * b[k][j]) %= mod;
 
     }
     for(int i = 0; i < x; i++)
