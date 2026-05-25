@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -53,3 +54,76 @@ int main(){
 
 	return 0;
 }
+=======
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sched.h>
+#include <sys/resource.h>
+#include <sys/types.h>
+
+int flag_int = 0;     // 收到 SIGINT 的标志
+int flag_tstp = 0;    // 收到 SIGTSTP 的标志
+
+
+void handler(int sig){
+    if (sig == SIGINT) flag_int = 1;
+    if (sig == SIGTSTP) flag_tstp = 1;
+}
+
+void run(char *name){
+    int prio;
+    int policy;
+
+    signal(SIGINT, handler);
+    signal(SIGTSTP, handler);
+
+    while (1) {
+        prio = getpriority(PRIO_PROCESS, 0);
+
+        // SIGINT，优先数加 1
+        if (flag_int == 1) {
+            flag_int = 0;
+            setpriority(PRIO_PROCESS, 0, prio + 1);
+            printf("%s receive SIGINT, priority + 1\n", name);
+        }
+
+        // SIGTSTP，优先数减 1
+        if (flag_tstp == 1) {
+            flag_tstp = 0;
+            setpriority(PRIO_PROCESS, 0, prio - 1);
+            printf("%s receive SIGTSTP, priority - 1\n", name);
+        }
+
+        prio = getpriority(PRIO_PROCESS, 0);
+        policy = sched_getscheduler(0);
+
+        printf("%s: pid = %d, ppid = %d, priority = %d, policy = ", name, getpid(), getppid(), prio);
+
+        if (policy == SCHED_OTHER)  printf("SCHED_OTHER");
+        else if (policy == SCHED_FIFO)  printf("SCHED_FIFO");
+        else if (policy == SCHED_RR)  printf("SCHED_RR");
+        else  printf("UNKNOWN");
+
+        printf("(%d)\n", policy);
+
+        sleep(2); // ！
+    }
+}
+
+int main(){
+
+    int pid = fork();
+
+    if (pid < 0) {
+        printf("fork error!\n");
+        exit(1);
+    }
+
+    if (!pid) run("child ");
+    else run("parent");
+  
+    return 0;
+}
+>>>>>>> Stashed changes
