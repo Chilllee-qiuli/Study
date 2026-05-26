@@ -1,55 +1,68 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-#define pr pair<int, int> 
-#define mk make_pair
-#define fi first 
-#define se second
-int n, m, k;
+const int maxn = 3e6 + 10;
+struct Trie{
+    int nxt[maxn][66], cnt;
+    int exist[maxn];
+    int getnum(char ch){
+        if(ch >= 'A' && ch <= 'Z') return ch - 'A';
+        else if(ch >= 'a' && ch <= 'z') return ch - 'a' + 26;
+        else return ch - '0' + 52;
+    }
 
-const int maxn = 1e5 + 10;
-pr a[maxn];
+    void init(){
+        for(int i = 0; i <= cnt; i++){
+            memset(nxt[i], 0, sizeof(nxt[i]));
+            exist[i] = 0;
+        }
+        cnt = 0;
+    }
+    void insert(string& s, int len){
+        int p = 0;
+        for(int i = 0; i < len; i++){
+            int c = getnum(s[i]);
+            if(!nxt[p][c]) nxt[p][c] = ++cnt;
+            p = nxt[p][c];
+            exist[p]++;
+        }
+    }
+    int find(string& s, int len){
+        int p = 0;
+        for(int i = 0; i < len; i++){
+            int c = getnum(s[i]);
+            if(!nxt[p][c]) return 0;
+            p = nxt[p][c];
+        }
+        return exist[p];
+    }
+}tr;
+
+
 
 int main(){
     ios::sync_with_stdio(0);
     cin.tie(0), cout.tie(0);
 
-    cin >> n >> m >> k;
+    int t;
+    cin >> t;
+    while(t--){
+        int n, q;
+        cin >> n >> q;
+        tr.init();
+        for(int i = 1; i <= n; i++){
+            string s;
+            cin >> s;
+            tr.insert(s, s.length());
+        }
 
-    for(int i = 1; i <= n; i++){
-        cin >> a[i].first >> a[i].second;
-    }
-    sort(a + 1, a + 1 + n, [](pr x, pr y){
-        return x.first > y.fi;
-    }); // 按照每块田原本的需要时间降序
-
-    ll tmp = 0;
-    a[0].fi = a[1].fi;
-    a[n + 1].fi = k;
-    for(int i = 1; i <= n + 1; i++){
-        tmp += a[i].se; // 记录前面所有田降低1单位的代价
-
-        if(a[i].fi != a[i + 1].fi){
-            int cur = a[i].fi;
-            int nxt = max(a[i + 1].fi, k);
-
-            ll diff = cur - nxt; // 记录当前能降低的最大差值
-            ll cost = diff * tmp;
-
-            if(m >= cost){
-                m -= cost;
-                if(nxt == k){
-                    cout << k << endl;
-                    return 0;
-                }
-            }
-            else{
-                cout << cur - m / tmp << endl;
-                return 0;
-            }
+        while(q--){
+            string s;
+            cin >> s;
+            cout << tr.find(s, s.length()) << "\n";
         }
     }
-    cout << k << endl;
 
-	return 0;
+
+    return 0;
 }
