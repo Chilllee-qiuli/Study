@@ -1,0 +1,133 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+const ll inf = 0x3f3f3f3f3f3f3f3f;
+
+int t;
+ll a;
+int n;
+int d[20];
+
+int m;
+vector<int> bit;
+
+ll dp[20][3];
+
+void pre(){
+    cin >> a >> n;
+    for(int i = 1; i <= n; i++) cin >> d[i];
+    sort(d + 1, d + n + 1);
+
+    vector<int>().swap(bit);
+
+    ll b = a;
+    if(b == 0) bit.push_back(0);
+    else {
+        while(b){
+            bit.push_back(b % 10);
+            b /= 10;
+        }
+        reverse(bit.begin(), bit.end());
+    }
+
+    m = bit.size();
+}
+
+ll getmx(int len){
+    if(len <= 0) return inf;
+
+    if(len > 1 && d[n] == 0) return inf;
+
+    ll res = 0;
+    for(int i = 1; i <= len; i++){
+        res = res * 10 + d[n];
+    }
+
+    return res;
+}
+
+ll getmn(int len){
+    if(len <= 0) return inf;
+    ll res = 0;
+
+    for(int i = 1; i <= len; i++){
+        int x = -1;
+        for(int j = 1; j <= n; j++){
+            if(i == 1 && len > 1 && d[j] == 0) continue;
+            x = d[j];
+            break;
+        }
+        if(x == -1) return inf;
+        res = res * 10 + x;
+    }
+
+    return res;
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+
+    cin >> t;
+
+    while(t--){
+        pre();
+
+        dp[0][0] = -1;
+        dp[0][1] = 0;
+        dp[0][2] = inf;
+
+        for(int i = 1; i <= m; i++){
+            dp[i][0] = -1;
+            dp[i][1] = -1;
+            dp[i][2] = inf;
+
+            int now = bit[i - 1];
+
+            for(int j = 1; j <= n; j++){
+                int x = d[j];
+
+                if(i == 1 && m > 1 && x == 0) continue;
+
+
+                if(dp[i - 1][0] != -1)
+                    dp[i][0] = max(dp[i][0], dp[i - 1][0] * 10 + x);
+
+                if(dp[i - 1][2] != inf)
+                    dp[i][2] = min(dp[i][2], dp[i - 1][2] * 10 + x);
+                
+                if(dp[i - 1][1] != -1){
+                    ll val = dp[i - 1][1] * 10 + x;
+                    if(x < now) dp[i][0] = max(dp[i][0], val);
+                    else if(x == now) dp[i][1] = val;
+                    else dp[i][2] = min(dp[i][2], val);                    
+                }
+            }
+        }
+
+        ll ans = inf;
+
+        if(dp[m][0] != -1) ans = min(ans, a - dp[m][0]);
+        
+
+        if(dp[m][1] != -1) ans = 0;
+        
+        if(dp[m][2] != inf) ans = min(ans, dp[m][2] - a);
+        
+
+        if(d[1] == 0) ans = min(ans, a);
+        // 少一位的最大数
+        ll spj1 = getmx(m - 1);
+        if(spj1 != inf) ans = min(ans, abs(a - spj1));
+        
+
+        // 多一位的最小数
+        ll spj2 = getmn(m + 1);
+        if(spj2 != inf) ans = min(ans, abs(a - spj2));
+    
+        cout << ans << '\n';
+    }
+
+    return 0;
+}
